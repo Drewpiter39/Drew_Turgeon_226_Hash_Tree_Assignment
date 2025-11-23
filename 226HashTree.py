@@ -19,42 +19,97 @@ def hashFunction(stringData):
     # For each character in the string it will cycle
     for char in stringData:
         # Adds the unicode to turn
-        turn = (turn + ord(char))
+        turn += ord(char)
     # Returns the unicode variant
     return turn
 
+def linearProbing(table, key, movie):
+    # The index that is being searched for collision 
+    # Modulus len(table) keeps it within valid space
+    index = key % len(table)
+    # counts to collisions to find empty spot
+    collision = 0
 
+    # So long as the table index that you are looking at is occupied
+    while table[index] != None:
+        # Add one to the collisions
+        collision += 1
+        # Increment plus one to look at the next spot
+        index = (index + 1) % len(table)
 
+    # Sets the free spot equal to the dataItem that you are adding
+    table[index] = movie
+    return collision
 
+# Imports time so that we can track how long each function takes
+import time
+
+# Imports csv to read file
 import csv
-size = 10000
-hashTitleTable = [None] * size
-hashQuoteTable = [None] * size
+size =  15001 # Sets size 
+hashTitleTable = [None] * size # Creates the hash table for titles
+hashQuoteTable = [None] * size # Creates the hash table for quotes
 
-file = "MOCK_DATA.csv"
-counter = 0
+file = "MOCK_DATA.csv" # Sets the file we are reading
+titleSorted = 0 # Counts the collisions for titles
+quoteSorted = 0 # Counts the collisions for quotes
 
-with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
+# Opens up the file to read
+with open(file, 'r', newline = '', encoding = "utf8") as csvfile: 
+    # Has the file get read
     reader = csv.reader(csvfile)
-    for row in reader:
-        # newItem = DataItem(row)
-
-        # print(row[0])
-        print(hashFunction(row[0]))
+    # Starts the clock for title
+    titleTime = time.time()
+    # Cycles through the rows
+    for row1 in reader:
 
         # Create a DataItem from row
-        # feed the appropriate field into the hash function
-        # to get a key
-        # mod the key value by the hash table length
-        # try to insert DataItem into hash table
-        # handle any collisions
-        counter += 1
-print(counter)
+        newTitleItem = DataItem(row1)
 
-# import random
+        # feed the appropriate field into the hash function to get a key
+        # Movie Title hash table
+        titleKey = hashFunction(newTitleItem.movieName)
+        # Gives us the collisions
+        titleSorted += linearProbing(hashTitleTable, titleKey, newTitleItem)
+    # Ends the clock for title
+    titleEnd = time.time()
 
-# def createList(n): # creates a random list of size n
-#     x = []
-#     for i in range(n):
-#         x.append(random.randint(1, 10000))
-#     return x
+    # resets where in the file is being looked at
+    # If we didn't do this it would continue to look at the end
+    csvfile.seek(0)
+    reader = csv.reader(csvfile)
+
+    # Starts the clock for quote
+    quoteTime = time.time()
+    # Cycles through the rows
+    for row2 in reader:
+        
+        # Create data item for row
+        newQuoteItem = DataItem(row2)
+
+        # Movie quote hash table
+        quoteKey = hashFunction(newQuoteItem.quote)
+        # Gives us the collisions
+        quoteSorted += linearProbing(hashQuoteTable, quoteKey, newQuoteItem)
+    # Ends the clock for quote
+    quoteEnd = time.time()
+
+# Checks how many spaces are wasted for title and quote
+titleWasted = sum(1 for x in hashTitleTable if x == None)
+quoteWasted = sum(1 for x in hashQuoteTable if x == None)
+
+# Titles
+# Prints the collisions, time spent, and spaces wasted
+print("Title Collisions: ", titleSorted)
+print("Title Time: ", [titleEnd - titleTime])
+print("Wasted Title Space: ", titleWasted)
+
+print("") # Just for organization
+
+# Quotes
+# Prints the collisions, time spent, and spaces wasted
+print("Quote Collisions: ", quoteSorted)    
+print("Quote Time: ", [quoteEnd - quoteTime])
+print("Wasted Quote Space: ", quoteWasted)
+
+
