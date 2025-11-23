@@ -12,6 +12,19 @@ the next spot in the hash table and repeat the pattern.
 for both title and quote.
 3. This method has a high number of collisions with 87862536 for 
 titles and 92779694 for quotes
-4. Both of these methods provide no wasted space.
+4. Both of these sorting catagories provide no wasted space.
 5. This method provides the benifit of using every space but With
 the disadvantage of taking a long time with a lot of collisions.
+
+Method 2: Non Probing
+1. This method has us look at the originally desired space that 
+the numerical equivelent of the string would like to go into. 
+This method varies from the previous by giving up if the space is
+already occupied and instead just returns collision.
+2. This method averages under 0.1 secs for both titles and quotes.
+3. This method has a lower number of collisions with 11245 for
+titles and 12277 for quotes. 
+4. Both of these sorting catagories provide waster space equal to
+their collisions, that being 11245 and 12277.
+5. This method has the advantage of being quick, but it also creates
+a lot of wasted space and deletions which is exceptionally problematic.

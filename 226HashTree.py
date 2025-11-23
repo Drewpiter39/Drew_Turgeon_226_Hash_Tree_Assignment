@@ -32,13 +32,14 @@ def linearProbing(table, key, movie):
 
     # So long as the table index that you are looking at is occupied
     while table[index] != None:
-        # Add one to the collisions
-        collision += 1
-        # Increment plus one to look at the next spot
-        index = (index + 1) % len(table)
+        # Add one to the collisions and skip input
+        collision = 1
+        # Returns the collision 
+        return collision
 
     # Sets the free spot equal to the dataItem that you are adding
     table[index] = movie
+    # Returns the collison amount
     return collision
 
 # Imports time so that we can track how long each function takes
