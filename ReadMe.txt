@@ -42,3 +42,17 @@ with 1100938 for titles and 1163760 for quotes.
 5. This method has the advantage of being quick, though it is not as
 fast as the previous, it has the advantage of having far less wasted
 spaces.
+
+Method 4: Bidirectional Probing. 
+1. This method has us look at the originially desired space that the 
+numerical equivelent of the string would like to go into. This method 
+varies by having us then look above then below that value, then above 
+and below those values. This means that we have a two headed probing 
+method.
+2. This method can vary in speed between 11 secs and 15 secs for both 
+titles and quotes.
+3. This method does have a larger amoutn of collisions than the previous
+with 86815543 for titles and 98815944 for quotes.
+4. Both of the sorting catagories including no wasted spaces.
+5. This method has the advantage of having no wasted space but is also
+slow and has a lot of collisons.

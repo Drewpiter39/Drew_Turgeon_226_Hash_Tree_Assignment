@@ -23,7 +23,7 @@ def hashFunction(stringData):
     # Returns the unicode variant
     return turn
 
-def quadProbing(table, key, movie):
+def bidirectionalProbing(table, key, movie):
     # The index that is being searched for collision 
     # Modulus len(table) keeps it within valid space
     index = key % len(table)
@@ -31,24 +31,30 @@ def quadProbing(table, key, movie):
     collision = 0
 
     # Tracks positioning for equation
-    i = 0
+    step = 1
+    # Tracks the base location
+    base = key % len(table)
 
-    # So long as the table index that you are looking at is occupied
-    while table[index] != None:
-        # Adds one to collision
-        collision += 1
-        # Adds one to location counter
-        i += 1
-        # Checks to see if i has gotten to large and exits
-        if i >= len(table):
-            return collision
-        # Calculates new spot 
-        index = (key + (i * i)) % len(table)
+    # Check to see if intented spot is empty
+    if table[base] == None:
+        # Sets the spot equal to the movie
+        table[base] = movie
+        # Returns no collisions.
+        return 0
 
-    # Sets the free spot equal to the dataItem that you are adding
-    table[index] = movie
-    # Returns the collison amount
-    return collision
+    # Use infinte loop
+    while True:
+        # Index where we are checking without exceeding the confinds of the list
+        index = (base + step) % len(table)
+
+        # Sees if location is empty
+        if (table[index] == None):
+            table[index] = movie # Sets the data in location
+            return collision # returns amount of collisions
+        
+        collision += 1 # Incraments the collision count
+        # Has step increment and swap sign after doing the negative equivelant
+        step = -step if step > 0 else - step + 1
 
 # Imports time so that we can track how long each function takes
 import time
@@ -79,7 +85,7 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie Title hash table
         titleKey = hashFunction(newTitleItem.movieName)
         # Gives us the collisions
-        titleSorted += quadProbing(hashTitleTable, titleKey, newTitleItem)
+        titleSorted += bidirectionalProbing(hashTitleTable, titleKey, newTitleItem)
 
     # Ends the clock for title
     titleEnd = time.time()
@@ -100,7 +106,7 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie quote hash table
         quoteKey = hashFunction(newQuoteItem.quote)
         # Gives us the collisions
-        quoteSorted += quadProbing(hashQuoteTable, quoteKey, newQuoteItem)
+        quoteSorted += bidirectionalProbing(hashQuoteTable, quoteKey, newQuoteItem)
     # Ends the clock for quote
     quoteEnd = time.time()
 
