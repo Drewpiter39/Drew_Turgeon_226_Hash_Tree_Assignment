@@ -28,3 +28,17 @@ titles and 12277 for quotes.
 their collisions, that being 11245 and 12277.
 5. This method has the advantage of being quick, but it also creates
 a lot of wasted space and deletions which is exceptionally problematic.
+
+Method 3: Quadratic Probing
+1. This method has us look at the originally desired space that the 
+numerical equivelent of the string would like to go into. This method
+varies by using the formula ((key + (i * i)) % len(table)) to calculate 
+the next position it will try. 
+2. This method is also quite quck averaging less that 0.25 secs for
+both titles and quotes.
+3. This method does have a larger amount of collisions than the previous
+with 1100938 for titles and 1163760 for quotes.
+4. Both of these sorting catagories wasted four spots in the table.
+5. This method has the advantage of being quick, though it is not as
+fast as the previous, it has the advantage of having far less wasted
+spaces.

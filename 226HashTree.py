@@ -23,19 +23,27 @@ def hashFunction(stringData):
     # Returns the unicode variant
     return turn
 
-def linearProbing(table, key, movie):
+def quadProbing(table, key, movie):
     # The index that is being searched for collision 
     # Modulus len(table) keeps it within valid space
     index = key % len(table)
     # counts to collisions to find empty spot
     collision = 0
 
+    # Tracks positioning for equation
+    i = 0
+
     # So long as the table index that you are looking at is occupied
     while table[index] != None:
-        # Add one to the collisions and skip input
-        collision = 1
-        # Returns the collision 
-        return collision
+        # Adds one to collision
+        collision += 1
+        # Adds one to location counter
+        i += 1
+        # Checks to see if i has gotten to large and exits
+        if i >= len(table):
+            return collision
+        # Calculates new spot 
+        index = (key + (i * i)) % len(table)
 
     # Sets the free spot equal to the dataItem that you are adding
     table[index] = movie
@@ -71,7 +79,8 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie Title hash table
         titleKey = hashFunction(newTitleItem.movieName)
         # Gives us the collisions
-        titleSorted += linearProbing(hashTitleTable, titleKey, newTitleItem)
+        titleSorted += quadProbing(hashTitleTable, titleKey, newTitleItem)
+
     # Ends the clock for title
     titleEnd = time.time()
 
@@ -91,7 +100,7 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie quote hash table
         quoteKey = hashFunction(newQuoteItem.quote)
         # Gives us the collisions
-        quoteSorted += linearProbing(hashQuoteTable, quoteKey, newQuoteItem)
+        quoteSorted += quadProbing(hashQuoteTable, quoteKey, newQuoteItem)
     # Ends the clock for quote
     quoteEnd = time.time()
 
