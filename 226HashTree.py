@@ -23,38 +23,37 @@ def hashFunction(stringData):
     # Returns the unicode variant
     return turn
 
-def bidirectionalProbing(table, key, movie):
-    # The index that is being searched for collision 
-    # Modulus len(table) keeps it within valid space
-    index = key % len(table)
+def doubleHashingProbing(table, key, movie):
     # counts to collisions to find empty spot
     collision = 0
+    # Tracks the index we are observing
+    index = key % len(table)
 
-    # Tracks positioning for equation
-    step = 1
-    # Tracks the base location
-    base = key % len(table)
 
-    # Check to see if intented spot is empty
-    if table[base] == None:
-        # Sets the spot equal to the movie
-        table[base] = movie
-        # Returns no collisions.
-        return 0
+    # This computes how large to step and makes sure it is never 0
+    step = (1 + (key % (size - 2)))
 
-    # Use infinte loop
-    while True:
-        # Index where we are checking without exceeding the confinds of the list
-        index = (base + step) % len(table)
+    # Keeps track of number of atempts bein made so it doesn't exceed the size of the table
+    atempts = 0
 
-        # Sees if location is empty
-        if (table[index] == None):
-            table[index] = movie # Sets the data in location
-            return collision # returns amount of collisions
-        
-        collision += 1 # Incraments the collision count
-        # Has step increment and swap sign after doing the negative equivelant
-        step = -step if step > 0 else - step + 1
+    # Checks to see if the spot is empty
+    while table[index] != None and atempts < size:
+        # If the spot is occupied increment collision
+        collision += 1
+        # Calculates the next spot that index will look at
+        index = (index + step) % size
+        # Increments atempts
+        atempts += 1
+
+    # Checks to see if the max size was met
+    if atempts == size:
+        # Returns collision amount
+        return collision
+    
+    # Sets the movie in the empty spot
+    table[index] = movie
+    # Returns the number of collisions
+    return collision
 
 # Imports time so that we can track how long each function takes
 import time
@@ -85,7 +84,7 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie Title hash table
         titleKey = hashFunction(newTitleItem.movieName)
         # Gives us the collisions
-        titleSorted += bidirectionalProbing(hashTitleTable, titleKey, newTitleItem)
+        titleSorted += doubleHashingProbing(hashTitleTable, titleKey, newTitleItem)
 
     # Ends the clock for title
     titleEnd = time.time()
@@ -106,7 +105,7 @@ with open(file, 'r', newline = '', encoding = "utf8") as csvfile:
         # Movie quote hash table
         quoteKey = hashFunction(newQuoteItem.quote)
         # Gives us the collisions
-        quoteSorted += bidirectionalProbing(hashQuoteTable, quoteKey, newQuoteItem)
+        quoteSorted += doubleHashingProbing(hashQuoteTable, quoteKey, newQuoteItem)
     # Ends the clock for quote
     quoteEnd = time.time()
 
